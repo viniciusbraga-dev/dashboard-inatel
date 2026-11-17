@@ -1,43 +1,51 @@
-function openMenu() {
-  document.getElementById("menu_aba").style.display = "block"; 
+const temas = {
+  inatel: {
+    '--cor-click':'#126ae2','--cor-sombra':'#0a599b','--cor-text':'#1b2430',
+    '--cor-text-secondary':'#596a7d','--cor-back1':'#edf2f4','--cor-back2':'#6a937a',
+    '--cor-surface':'#ffffff','--cor-surface-alt':'#f7f9fc','--cor-border':'#dce4ed',
+    '--cor-shadow':'#152b451a','--cor-icon-bg':'#eaf2ff','--cor-on-primary':'#ffffff',
+    '--md-sys-color-primary':'#126ae2','--md-sys-color-on-primary':'#ffffff',
+    '--md-sys-color-primary-container':'#eaf2ff','--md-sys-color-on-primary-container':'#1b2430',
+    '--frequencia':'#126ae2','--nota':'#126ae2','--prova':'#126ae2'
+  },
+  limao: {
+    '--cor-click':'#526814','--cor-sombra':'#3d500f','--cor-text':'#263018',
+    '--cor-text-secondary':'#5b6646','--cor-back1':'#f4f7e8','--cor-back2':'#e9efcf',
+    '--cor-surface':'#ffffff','--cor-surface-alt':'#f8faef','--cor-border':'#d9e2bd',
+    '--cor-shadow':'#3a48120f','--cor-icon-bg':'#edf2d8','--cor-on-primary':'#ffffff',
+    '--md-sys-color-primary':'#526814','--md-sys-color-on-primary':'#ffffff',
+    '--md-sys-color-primary-container':'#e9efcf','--md-sys-color-on-primary-container':'#263018',
+    '--frequencia':'#526814','--nota':'#526814','--prova':'#526814'
+  },
+  dark: {
+    '--cor-click':'#8ab8ff','--cor-sombra':'#b5d1f8','--cor-text':'#f2f5fa',
+    '--cor-text-secondary':'#b7c2d0','--cor-back1':'#111827','--cor-back2':'#202d3e',
+    '--cor-surface':'#1b2635','--cor-surface-alt':'#222f40','--cor-border':'#364458',
+    '--cor-shadow':'#00000050','--cor-icon-bg':'#293c56','--cor-on-primary':'#142236',
+    '--md-sys-color-primary':'#8ab8ff','--md-sys-color-on-primary':'#142236',
+    '--md-sys-color-primary-container':'#293c56','--md-sys-color-on-primary-container':'#f2f5fa',
+    '--frequencia':'#8ab8ff','--nota':'#8ab8ff','--prova':'#8ab8ff'
+  }
+};
+function openMenu() { document.getElementById("menu_aba").style.display = "block"; }
+function closeMenu() { document.getElementById("menu_aba").style.display = "none"; }
+function aplicarTema(nome, salvar=true) {
+  const escolha = temas[nome] ? nome : 'inatel';
+  const root = document.documentElement;
+  root.dataset.tema = escolha;
+  for (const [variavel, valor] of Object.entries(temas[escolha])) root.style.setProperty(variavel, valor);
+  document.querySelectorAll('[data-theme-option]').forEach(opcao => {
+    opcao.classList.toggle('active-theme', opcao.dataset.themeOption === escolha);
+    opcao.setAttribute('aria-pressed', String(opcao.dataset.themeOption === escolha));
+  });
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = escolha === 'dark' ? '#111827' : escolha === 'limao' ? '#526814' : '#126ae2';
+  if (salvar) { try { localStorage.setItem('inatel-theme', escolha); } catch (_) {} }
 }
-
-function closeMenu() {
-  document.getElementById("menu_aba").style.display = "none";    
-}
-
-function temaLim() {
-    document.documentElement.style.setProperty('--cor-click', '#38184C');
-    document.documentElement.style.setProperty('--cor-sombra', '#9b0a59');
-    document.documentElement.style.setProperty('--cor-text', 'black');
-    document.documentElement.style.setProperty('--cor-back1', '#CEF09D');
-    document.documentElement.style.setProperty('--cor-back2', '#4f6a93');
-    document.documentElement.style.setProperty('--md-sys-color-primary', '#38184C');
-}
-
-function temaInatel() {
-    document.documentElement.style.setProperty('--cor-click', '#126ae2');
-    document.documentElement.style.setProperty('--cor-sombra', '#0a599b');
-    document.documentElement.style.setProperty('--cor-text', 'black');
-    document.documentElement.style.setProperty('--cor-back1', '#edf2f4');
-    document.documentElement.style.setProperty('--cor-back2', '#6a937a');
-    document.documentElement.style.setProperty('--md-sys-color-primary', '#126ae2');
-}
-
-function temaDark() {
-    const cores = {
-        '--cor-click': '#CEF09D',
-        '--cor-sombra': '#9b0a59',
-        '--cor-text': '#ffffff',
-        '--cor-back1': '#38184C',
-        '--cor-back2': '#4f6a93',
-        '--md-sys-color-primary': '#CEF09D'
-    };
-
-    for (const [variavel, valor] of Object.entries(cores)) {
-        document.documentElement.style.setProperty(variavel, valor);
-    }
-}
+function temaLim() { aplicarTema('limao'); }
+function temaInatel() { aplicarTema('inatel'); }
+function temaDark() { aplicarTema('dark'); }
+try { aplicarTema(localStorage.getItem('inatel-theme') || 'inatel', false); } catch (_) { aplicarTema('inatel', false); }
 
 const eventos = [
     {
@@ -155,7 +163,7 @@ class AulasComponent extends HTMLElement {
       <style>
       .comp-aula {
         position: relative;
-        background-color: white;
+        background-color: var(--cor-surface); border:1px solid var(--cor-border); box-shadow:0 4px 14px var(--cor-shadow);
         padding: 15px;
         margin: 20px;
         border-radius: 10px;
@@ -211,7 +219,7 @@ class AulasComponent extends HTMLElement {
 customElements.define('aulas-component', AulasComponent);
 
 // RESERVA ARMÁRIO
-const usuario = { nome: "Vinícius", matricula: "473", pendencia: false, acessibilidade: true };
+const usuario = { nome: "Ana", matricula: "473", pendencia: false, acessibilidade: true };
 
 const armarios = [
   { id: 1, formato: "padrao", status: true, acessivel: false },
