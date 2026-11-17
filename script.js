@@ -167,7 +167,7 @@ class AulasComponent extends HTMLElement {
         padding: 15px;
         margin: 20px;
         border-radius: 10px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 14px var(--cor-shadow);
       }
       .titulo_aula {
         font-family: "Arimo", sans-serif;
@@ -193,7 +193,7 @@ class AulasComponent extends HTMLElement {
       .lable-nota-vermelho { background-color: #e53935; padding: 7px 15px; margin-right: 10px; border-radius: 500px; }
       .lable-nota-laranja { background-color: #fb8c00; padding: 7px 15px; margin-right: 10px; border-radius: 500px; color: white; }
       .lable-nota-verde { background-color: #43a047; padding: 7px 15px; margin-right: 10px; border-radius: 500px; }
-      .p_lable { font-family: "Arimo", sans-serif; font-size: 11px; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .p_lable { font-family: "Arimo", sans-serif; font-size: 11px; color: var(--cor-on-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       </style>
       <div>
         ${aulasDia.map(a => {
